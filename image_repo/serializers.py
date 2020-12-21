@@ -9,10 +9,43 @@ class PermissionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ImageRepositorySerializer(serializers.ModelSerializer):
-    owner_info = UserSerializer(source='owner', read_only=True)
+class RepoImagesSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = models.ImageRepository
-        fields = ('id', 'caption', 'image_url', 'image_type',
-                  'owner', 'owner_info', 'permission', 'created_at')
+        model = models.RepositoryImages
+        fields = '__all__'
+        extra_kwargs = {
+            "repository": {"write_only": True}
+        }
+
+
+class RepositorySerializer(serializers.ModelSerializer):
+    owner_info = UserSerializer(source='owner', read_only=True)
+    images = RepoImagesSerializer(
+        source="repository", many=True, read_only=True)
+
+    class Meta:
+        model = models.Repository
+        fields = ['id', 'caption',
+                  'owner', 'owner_info', 'permission', 'images', 'created_at']
+        extra_kwargs = {
+            "owner": {"write_only": True}
+        }
+
+
+# validator of permission field.
+
+
+def is_valid_permission(pk):
+    try:
+        permission = models.Permissions.objects.get(
+            pk=pk)
+        return pk
+    except Exception:
+        raise serializers.ValidationError("Invalid Permission.")
+
+
+class RepoFormSerializer(serializers.Serializer):
+    caption = serializers.CharField()
+    permission = serializers.IntegerField(validators=[is_valid_permission])
+    images = serializers.ListField(child=serializers.ImageField())
