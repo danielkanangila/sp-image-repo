@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -12,7 +13,7 @@ class PermissionAPIVIew(generics.ListAPIView):
     serializer_class = serializers.PermissionSerializer
 
 
-class ImageRepositoryAPIView(APIView):
+class RepositoryAPIView(APIView):
     permission_classes = [
         permissions.IsAuthenticated
     ]
@@ -31,6 +32,14 @@ class ImageRepositoryAPIView(APIView):
 
         # return the saved data
         return Response(serializers.RepositorySerializer(instance=repo).data)
+
+    def delete(sef, request, *args, **kwargs):
+        # retrieve the repository to delete
+        repository = get_object_or_404(models.Repository, pk=kwargs.get('pk'))
+        # delete the repository
+        repository.delete()
+        # return the deleted id
+        return Response({"id": kwargs.get('pk')})
 
     def create_repository(self, request, validated_data):
         try:
@@ -72,3 +81,31 @@ class ImageRepositoryAPIView(APIView):
             # raise an exception
             raise APIException(
                 "Repo creation unsuccessful. An error occurred while trying to save images")
+
+
+class DeleteImageAPIView(generics.DestroyAPIView):
+    permission_classes = [
+        permissions.IsAuthenticated
+    ]
+    queryset = models.RepositoryImages.objects.all()
+    serializer_class = serializers.RepoImagesSerializer
+
+
+class DeleteImagesAPIView(APIView):
+    permission_classes = [
+        permissions.IsAuthenticated
+    ]
+
+    def delete(self, request, *args, **kwargs):
+        try:
+            query = request.GET["delete"]
+            repo_pk = kwargs.get('repository_id')
+            if query == "all":
+                images = models.RepositoryImages.objects.filter(
+                    repository=repo_pk)
+                images.delete()
+            return Response(status=204)
+        except Exception as e:
+            print(e)
+            raise APIException(
+                "An error occurred while trying to delete images. Please check your URL.")

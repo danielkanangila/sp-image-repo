@@ -26,6 +26,14 @@ class Repository(models.Model):
     permission = models.ForeignKey(Permissions, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def delete(self):
+        images = RepositoryImages.objects.filter(repository=self)
+
+        for image in images:
+            image.image.delete(save=False)  # delete file in the S3 bucket
+            image.delete()  # delete model instance
+        super(Repository, self).delete()
+
 
 class RepositoryImages(models.Model):
     repository = models.ForeignKey(
@@ -33,3 +41,7 @@ class RepositoryImages(models.Model):
     image = models.ImageField(upload_to=upload_to)
     image_type = models.CharField(
         max_length=50, null=True, blank=True, default=None)
+
+    def delete(self):
+        self.image.delete(save=False)
+        super(RepositoryImages, self).delete()
