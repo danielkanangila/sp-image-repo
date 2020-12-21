@@ -25,3 +25,4 @@ class ImageRepository(models.Model):
         max_length=50, null=True, blank=True, default=None)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     permission = models.ForeignKey(Permissions, on_delete=models.PROTECT)
+    created_at = models.DateTimeField(auto_now_add=True)
