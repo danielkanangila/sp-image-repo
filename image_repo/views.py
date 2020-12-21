@@ -11,7 +11,7 @@ class PermissionAPIVIew(generics.ListAPIView):
     serializer_class = serializers.PermissionSerializer
 
 
-class ImageRepositoryAPIView(generics.CreateAPIView, generics.ListCreateAPIView):
+class ImageRepositoryAPIView(generics.CreateAPIView):
     permission_classes = [
         permissions.IsAuthenticated
     ]
