@@ -3,6 +3,7 @@
   fields:
     perm: private
     description: Only image owner can see this image
+- model: image_repo.Permissions
   pk: 2
   fields:
     perm: public
