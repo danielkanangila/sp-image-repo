@@ -7,9 +7,6 @@ from . import serializers
 
 
 class PermissionAPIVIew(generics.RetrieveAPIView, generics.ListAPIView):
-    permission_classes = [
-        permissions.IsAuthenticated
-    ]
     queryset = models.Permissions.objects.all()
     serializer_class = serializers.PermissionSerializer
 

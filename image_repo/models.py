@@ -7,6 +7,7 @@ from django.utils import timezone
 
 
 def upload_to(instance, filename):
+    print(instance)
     now = timezone.now()
     base, extension = os.path.splitext(filename.lower())
     milliseconds = now.microsecond // 1000
@@ -14,7 +15,7 @@ def upload_to(instance, filename):
 
 
 class Permissions(models.Model):
-    type = models.CharField(max_length=50)
+    perm = models.CharField(max_length=50)
     description = models.TextField(null=True, blank=True, default=None)
 
 

@@ -1,0 +1,9 @@
+- model: image_repo.Permissions
+  pk: 1
+  fields:
+    perm: private
+    description: Only image owner can see this image
+  pk: 2
+  fields:
+    perm: public
+    description: All person with the link can see the image
