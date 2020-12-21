@@ -23,6 +23,7 @@ class ImageRepository(models.Model):
     image_url = models.ImageField(upload_to=upload_to)
     image_type = models.CharField(
         max_length=50, null=True, blank=True, default=None)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(
+        User, on_delete=models.CASCADE)
     permission = models.ForeignKey(Permissions, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)

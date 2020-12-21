@@ -29,18 +29,14 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '*'
+    "127.0.0.1",
+    "localhost"
 ]
 
 # SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
-CORS_ORIGIN_ALLOW_ALL = False
-
-CORS_ORIGIN_WHITELIST = [
-    '*'
-]
-
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
 
@@ -52,8 +48,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'knox',
     'corsheaders',
     'accounts',
+    'image_repo'
 ]
 
 
@@ -123,6 +121,9 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# Auth
+AUTH_USER_MODEL = "accounts.User"
 
 
 # Internationalization
